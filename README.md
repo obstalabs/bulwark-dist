@@ -89,6 +89,24 @@ allows with `bulwark base-set`. This is a stated trade-off, not a magic wand:
 wide enough to run a program, narrow enough that sensitive material stays out of
 reach.
 
+### Crash-safe: hardened mode
+
+The same allowlist, enforced as a **kernel-level Landlock floor** instead of via
+the supervisor:
+
+```sh
+sudo bulwark run --hardened \
+  --allow '/var/log/clickhouse-server/**' \
+  -- triage-agent --investigate "query timeouts"
+```
+
+Hardened mode applies the restriction to the agent process in the kernel and
+then becomes the agent — there is no supervisor. The floor cannot be widened by
+killing anything: even a `SIGKILL`, a crash, or power loss leaves the agent
+denied. (`no_new_privs` also blocks escalation around the floor.) Requires
+Landlock (Linux 5.13+). Use this for unattended dispatch where the worst case
+includes the supervisor dying at the wrong moment.
+
 See `bulwark --help` and the per-command help for policy files (`Bulwark.toml`),
 profiles, `allow`/`deny`, `audit`, and `base-set`.
 

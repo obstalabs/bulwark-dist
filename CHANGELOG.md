@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.3.0] - 2026-06-04
+
+- Hardened mode: `bulwark run --hardened --allow '<glob>' -- <cmd>` enforces the
+  allowlist as a kernel-level Landlock read floor instead of via the fanotify
+  supervisor. Crash-safe — the restriction lives in the kernel on the agent
+  itself, so a `SIGKILL`, crash, or power loss cannot widen access. `no_new_privs`
+  also blocks escalation around the floor. Requires Landlock (Linux 5.13+).
+
 ## [0.2.0] - 2026-06-04
 
 - CI / dispatch mode: `bulwark run --deny-all --allow '<glob>' -- <cmd>` runs an
