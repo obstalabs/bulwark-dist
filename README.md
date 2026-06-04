@@ -67,8 +67,30 @@ sudo bulwark run --consent socket --protect ~/.ssh -- claude
 bulwark consent          # shows Process / Path / Reason, then: allow / deny
 ```
 
+## CI / dispatch — give an agent exactly one path
+
+For pipelines and unattended dispatch, run in **default-deny allowlist mode**:
+the agent may read only the paths you grant plus a runtime base set, and every
+other read is denied — no human in the loop.
+
+```sh
+# Dispatch a triage agent to a production host with read access to the LOGS
+# only — never the data directory, never credentials.
+sudo bulwark run --deny-all \
+  --allow '/var/log/clickhouse-server/**' \
+  -- triage-agent --investigate "query timeouts on shard 3"
+```
+
+The agent reads the logs and runs normally; it is denied the data directory,
+credentials, `/etc/shadow`, and anything else. A program needs to read its
+linker, libc, and a few system files just to start, so allowlist mode permits a
+**runtime base set** in addition to your grants — inspect exactly what that
+allows with `bulwark base-set`. This is a stated trade-off, not a magic wand:
+wide enough to run a program, narrow enough that sensitive material stays out of
+reach.
+
 See `bulwark --help` and the per-command help for policy files (`Bulwark.toml`),
-profiles, `allow`/`deny`, and `audit`.
+profiles, `allow`/`deny`, `audit`, and `base-set`.
 
 ## Install
 
