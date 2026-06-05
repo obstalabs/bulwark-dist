@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.4.0] - 2026-06-05
+
+- Remote enforcement: `bulwark ssh user@host --protect <paths> -- <agent>` runs
+  an agent on a remote host with the gate on the *remote* kernel (SSH is only
+  transport) and consent routed back to the local operator. A protected read is
+  denied immediately (the kernel deadline is never held while you decide); a
+  prompt surfaces locally and an `allow-session` reply lets the next read of
+  that file through. Grants are scoped to identity, session, and policy version.
+  Preview of the remote tier — SSH provides transport/auth today; a signed mTLS
+  trust channel is the production hardening to come, and the `bulwark` binary
+  must be present on the remote host.
+
 ## [0.3.0] - 2026-06-04
 
 - Hardened mode: `bulwark run --hardened --allow '<glob>' -- <cmd>` enforces the

@@ -107,6 +107,29 @@ denied. (`no_new_privs` also blocks escalation around the floor.) Requires
 Landlock (Linux 5.13+). Use this for unattended dispatch where the worst case
 includes the supervisor dying at the wrong moment.
 
+## Remote: let an agent SSH into a server, gated
+
+When an agent runs on a remote host, the read happens on the *remote* kernel — a
+local guard sees only encrypted SSH traffic. So Bulwark runs the gate on the
+remote machine and routes consent back to you:
+
+```sh
+bulwark ssh user@prod-host \
+  --protect /etc --protect /var/lib/postgresql \
+  -- claude
+```
+
+Enforcement is on the remote kernel; SSH is only transport. A protected read is
+denied immediately (the kernel deadline cannot be held while you think), and a
+prompt — host, path, process chain — surfaces locally. Your `allow-session`
+answer lets the next read of that file through; the agent on the remote host
+never sees the prompt and cannot forge it. Grants are scoped to the requester
+identity, the session, and the policy version, so they cannot over-authorize.
+
+This is a preview of the remote tier: SSH provides transport and authentication
+today; a signed, time-bounded trust channel (mutual TLS) is the production
+hardening to come. The `bulwark` binary must be present on the remote host.
+
 See `bulwark --help` and the per-command help for policy files (`Bulwark.toml`),
 profiles, `allow`/`deny`, `audit`, and `base-set`.
 
