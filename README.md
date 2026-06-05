@@ -109,6 +109,26 @@ denied. (`no_new_privs` also blocks escalation around the floor.) Requires
 Landlock (Linux 5.13+). Use this for unattended dispatch where the worst case
 includes the supervisor dying at the wrong moment.
 
+## Integrity circuit-breaker
+
+Each run records its integrity context — a clean-shutdown marker and the inode
+identity of every protected file. The next run enters **tainted mode** if the
+prior run ended uncleanly (a `SIGKILL`, crash, OOM, or power loss left no
+clean-shutdown marker) or if a protected path now resolves to a different inode.
+
+A tainted run denies protected reads by default, and in interactive mode it
+re-asks for every protected open instead of trusting a cached approval — no
+pre-taint grant survives. The taint is sticky and persists across restarts until
+an operator reviews the audit record and acknowledges it:
+
+```sh
+bulwark reset   # clears the taint after review
+```
+
+This bounds the blast radius after an unclean recovery. A held read at the exact
+instant of a hard kill is governed by the kernel's documented behaviour (see
+below); hardened mode is the crash-safe answer for that case.
+
 ## Remote: let an agent SSH into a server, gated
 
 When an agent runs on a remote host, the read happens on the *remote* kernel — a
