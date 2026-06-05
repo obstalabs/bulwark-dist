@@ -142,15 +142,30 @@ bulwark ssh user@prod-host \
 ```
 
 Enforcement is on the remote kernel; SSH is only transport. A protected read is
-denied immediately (the kernel deadline cannot be held while you think), and a
-prompt — host, path, process chain — surfaces locally. Your `allow-session`
-answer lets the next read of that file through; the agent on the remote host
-never sees the prompt and cannot forge it. Grants are scoped to the requester
-identity, the session, and the policy version, so they cannot over-authorize.
+denied immediately (the kernel deadline cannot be held while you think), and the
+prompt — host, path, process chain — surfaces **on your machine**, where you
+answer it: the operator loop runs locally, not on the remote host. Your
+`allow-session` answer travels back over a separate control channel and lets the
+next read of that file through; the agent on the remote host never sees the
+prompt and cannot forge it. Grants are scoped to the requester identity, the
+session, and the policy version, so they cannot over-authorize. For unattended
+dispatch, `--auto <verdict>` answers every prompt the same way (CI).
+
+If the remote host does not have `bulwark`, it is deployed for you:
+
+```sh
+bulwark ssh user@prod-host --deploy auto \
+  --protect /etc -- claude
+```
+
+`--deploy auto` (the default) uses an existing remote binary, else copies the
+local one when it is arch-compatible, else downloads the matching release and
+verifies its checksum before running. Use `--deploy never` to require an existing
+binary, or `scp`/`dist` to force a path.
 
 This is a preview of the remote tier: SSH provides transport and authentication
 today; a signed, time-bounded trust channel (mutual TLS) is the production
-hardening to come. The `bulwark` binary must be present on the remote host.
+hardening to come.
 
 See `bulwark --help` and the per-command help for policy files (`Bulwark.toml`),
 profiles, `allow`/`deny`, `audit`, and `base-set`.
