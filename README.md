@@ -42,10 +42,12 @@ It does one thing: gate the read at the kernel.
 
 ## Requirements
 
-- **Linux.** Bulwark uses fanotify permission events; macOS support (via the
-  Endpoint Security framework) is in development.
-- **Root / `CAP_SYS_ADMIN`.** fanotify permission gating is a privileged
-  operation.
+- **Linux today**, distributed as release tarballs (below). **macOS support is
+  in development** as part of the open Core — the same local gate, via Apple
+  Endpoint Security. Official macOS builds will be Obsta-signed and installable
+  with `brew install obstalabs/tap/bulwark` once Apple grants the Endpoint
+  Security entitlement.
+- **Root** (`CAP_SYS_ADMIN` for the fanotify gate; Landlock for `--hardened`).
 
 ## Quick start
 
