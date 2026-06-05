@@ -145,10 +145,22 @@ sudo install -m 0755 bulwark /usr/local/bin/bulwark
 bulwark --version
 ```
 
-## License
+## Editions
 
-Bulwark's open core is licensed under **AGPL-3.0-or-later**. The enforcement
-product — fleet control plane, audit pipeline, macOS daemon, and integrations —
-is commercial.
+**Local enforcement is open. Managed trust is paid.** The line is architectural:
+if it runs entirely on your own machines, it is open source; if it depends on
+managed trust, identity, fleet policy, or audit infrastructure, it is the
+commercial tier.
+
+**Bulwark Core** — AGPL-3.0-or-later, self-managed local enforcement:
+the read gate, local off-band consent, the CI allowlist (`--deny-all`), the
+crash-safe Landlock floor (`--hardened`), and the peer `bulwark ssh` mechanism
+when you own both ends. Local functionality is never gated by a license check.
+
+**Bulwark Pro / Fleet** — the commercial tier, managed trust for teams: the
+remote trust channel (mutual-TLS, signed-grant authority), fleet policy
+distribution, a centralized tamper-evident audit pipeline, team approval flows,
+an operator cockpit, and an SLA on the consent channel. `bulwark ssh` is the open
+mechanism; the managed trust around it is the product.
 
 Copyright © 2026 Obsta Labs.
