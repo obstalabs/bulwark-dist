@@ -109,6 +109,25 @@ denied. (`no_new_privs` also blocks escalation around the floor.) Requires
 Landlock (Linux 5.13+). Use this for unattended dispatch where the worst case
 includes the supervisor dying at the wrong moment.
 
+### When an agent pulls the lever: the clamp is a ratchet
+
+In a multi-agent fleet, the thing applying the restraint is itself an agent — an
+orchestrator dispatching a sub-agent onto a sensitive host wraps it in a Bulwark
+read-gate at dispatch. That is why Bulwark is built to be operated by an agent,
+not only a human. But handing an agent the lever is only safe if the lever turns
+**one way**:
+
+- **Tightening** a clamp — adding a `--protect`, narrowing an allowlist — is
+  agent-initiated and free. Adding restriction is always safe.
+- **Widening or removing** a clamp routes through the off-band consent path
+  (`--consent socket`), where a human answers over a channel the supervised tree
+  cannot see or forge. **An agent can clamp; it cannot un-clamp.**
+
+This asymmetry is the whole reason it is safe to let one agent bound another. A
+restraint tool whose restraint an agent can quietly loosen is not a restraint.
+The principle is general: *agent-native compliance is about who pulls the lever,
+not who gets restricted* — and a lever an agent may pull must be a ratchet.
+
 ## Integrity circuit-breaker
 
 Each run records its integrity context — a clean-shutdown marker and the inode
