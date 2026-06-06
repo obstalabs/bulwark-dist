@@ -1,5 +1,31 @@
 # Changelog
 
+## [0.7.0] - 2026-06-06
+
+- Agent-operable surface (ANCC): `bulwark init` writes a default `Bulwark.toml`;
+  `bulwark doctor` reports whether a host can enforce (OS, root/`CAP_SYS_ADMIN`,
+  kernel, Landlock) and exits non-zero when a required capability is missing;
+  `--format json` added to `audit`, `check`, and `doctor` as the agent interface.
+  Ships `docs/SKILL.md`, the machine-readable contract — documenting the clamp
+  ratchet: an agent can tighten a clamp freely, but widening or removing one
+  routes through off-band consent. An agent can clamp; it cannot un-clamp.
+
+## [0.6.0] - 2026-06-05
+
+- Remote productionization: `bulwark ssh` now answers the consent prompt on the
+  local operator's machine (the relay runs locally, not on the remote host), and
+  `--deploy <auto|never|scp|dist>` deploys the `bulwark` binary to a remote host
+  that does not have it (existing binary, scp when arch-compatible, or the
+  matching release verified by checksum). `--auto` still answers non-interactively.
+
+## [0.5.0] - 2026-06-05
+
+- Integrity circuit-breaker: each run records a clean-shutdown marker and the
+  inode identity of every protected object. The next run enters tainted mode after
+  an unclean restart (`SIGKILL`/crash) or object-identity drift — protected reads
+  are denied and the allow-session cache is bypassed until an operator runs
+  `bulwark reset`. Bounds the blast radius after an unclean recovery.
+
 ## [0.4.0] - 2026-06-05
 
 - Remote enforcement: `bulwark ssh user@host --protect <paths> -- <agent>` runs
