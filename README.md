@@ -11,6 +11,7 @@ This repository holds **binary releases**. The source is private.
 
 ![platform](https://img.shields.io/badge/platform-Linux-blue)
 ![license](https://img.shields.io/badge/license-AGPL--3.0-green)
+[![ANCC](https://img.shields.io/badge/ANCC-compliant-brightgreen)](https://ancc.dev)
 
 ## What Bulwark is
 
