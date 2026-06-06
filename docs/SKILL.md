@@ -111,7 +111,7 @@ Report what the active policy decides for a path, without running anything.
 
 **JSON output:**
 ```json
-{"path": "/etc/shadow", "decision": "outside_prompt", "effect": "read denied"}
+{"path": "/etc/shadow", "decision": "outside_prompt", "effect": "read DENIED"}
 ```
 
 **Exit codes:**
