@@ -9,7 +9,7 @@ channel the agent cannot see or answer — before a single byte reaches the agen
 
 This repository holds **binary releases**. The source is private.
 
-![platform](https://img.shields.io/badge/platform-Linux-blue)
+![platform](https://img.shields.io/badge/platform-Linux%20%26%20macOS-blue)
 ![license](https://img.shields.io/badge/license-AGPL--3.0-green)
 [![ANCC](https://img.shields.io/badge/ANCC-compliant-brightgreen)](https://ancc.dev)
 
@@ -43,12 +43,14 @@ It does one thing: gate the read at the kernel.
 
 ## Requirements
 
-- **Linux today**, distributed as release tarballs (below). **macOS support is
-  in development** as part of the open Core — the same local gate, via Apple
-  Endpoint Security. Official macOS builds will be Obsta-signed and installable
-  with `brew install obstalabs/tap/bulwark` once Apple grants the Endpoint
-  Security entitlement.
-- **Root** (`CAP_SYS_ADMIN` for the fanotify gate; Landlock for `--hardened`).
+- **Linux and macOS.** Linux uses the fanotify gate; macOS uses the same local
+  gate via Apple Endpoint Security. macOS builds are Obsta-signed and notarized,
+  installable with `brew install obstalabs/tap/bulwark` or the direct `.pkg`
+  (below).
+- **Root** — Linux needs `CAP_SYS_ADMIN` for the fanotify gate (Landlock for
+  `--hardened`); macOS needs root plus Full Disk Access for the Endpoint Security
+  gate. The macOS kernel gate is a signed component installed alongside the CLI;
+  run `bulwark doctor` to check your setup.
 
 ## Quick start
 
@@ -191,6 +193,32 @@ See `bulwark --help` and the per-command help for policy files (`Bulwark.toml`),
 profiles, `allow`/`deny`, `audit`, and `base-set`.
 
 ## Install
+
+### Homebrew (Linux & macOS)
+
+```sh
+brew install obstalabs/tap/bulwark
+```
+
+On macOS the formula installs the notarized CLI. The kernel gate is a separate
+signed Endpoint Security component — run `bulwark doctor` for setup.
+
+### macOS — direct notarized package
+
+For an offline-trusted install (signed, notarized, and stapled), download the
+`.pkg` for your architecture from the
+[latest release](https://github.com/obstalabs/bulwark-dist/releases/latest):
+
+```sh
+# Apple Silicon: bulwark-<version>-aarch64-apple-darwin.pkg
+# Intel:         bulwark-<version>-x86_64-apple-darwin.pkg
+sudo installer -pkg bulwark-<version>-<arch>-apple-darwin.pkg -target /
+bulwark --version
+```
+
+Or via Homebrew cask: `brew install --cask obstalabs/tap/bulwark`.
+
+### Linux — release tarball
 
 Download the archive for your architecture from the
 [latest release](https://github.com/obstalabs/bulwark-dist/releases/latest),
