@@ -29,6 +29,14 @@ sees the prompt, the list of protected paths, or that a human was asked.
 - **A receipt for every decision** — who tried to open what, the process chain
   that led there, allow or deny, and why.
 
+AI agents pushed roughly **29 million secrets** to public GitHub in 2025, often by
+reading a `.env` they were never meant to touch — and AI-assisted commits leak at
+about twice the human rate (GitGuardian). See
+[docs/real-world-leaks.md](docs/real-world-leaks.md) for named incidents — the Claude
+Code source-map leak, the Cursor `.env` exfiltration, the Nx supply-chain SSH-key
+sweep — and the exact Bulwark commands (with real output) that stop the read at the
+kernel.
+
 ## What Bulwark is NOT
 
 - **Not redaction.** It stops the open from happening; it does not scrub bytes
