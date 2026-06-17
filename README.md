@@ -7,7 +7,8 @@ agent under Bulwark; when any process in its tree tries to read a protected file
 the Linux kernel **pauses the read** and asks a human — out of band, over a
 channel the agent cannot see or answer — before a single byte reaches the agent.
 
-This repository holds **binary releases**. The source is private.
+This repository holds **binary releases**. Source (AGPL-3.0):
+**[obstalabs/bulwark](https://github.com/obstalabs/bulwark)**.
 
 ![platform](https://img.shields.io/badge/platform-Linux%20%26%20macOS-blue)
 ![license](https://img.shields.io/badge/license-AGPL--3.0-green)
