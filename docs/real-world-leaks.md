@@ -41,7 +41,28 @@ captured on a live Linux host — how Bulwark's kernel read-gate changes the out
 
 The common root in every case: **the agent was allowed to *read* the secret.**
 Encoding, DNS, npm, an attacker endpoint — those are just the exit. Bulwark stops the
-read.
+read **when the secret is outside the agent's approved read boundary** (protected by
+inode, or outside an allowlist). That boundary condition is the whole game; the rest
+of this page is about where it holds and where it does not.
+
+## Where Bulwark helps — and where it does not
+
+Read this as a threat model, not a pitch. Bulwark interrupts exactly one primitive:
+the unauthorized **read**. So it helps wherever the leak chain begins with the agent
+reading a file it should not — and it does nothing for a secret the agent already
+legitimately holds.
+
+| Incident shape | What leaks | Bulwark helps? | Condition |
+|---|---|---|---|
+| Agent reads `.env` "to be helpful" | local credentials | **Yes** | `.env` protected, or outside the allowlist |
+| DNS / HTTP exfiltration | secret bytes, any exit | **Yes** | the *read* is denied first — the exit has nothing to carry |
+| Nx-style post-install malware | SSH/GitHub/npm tokens | **Partly** | only if the malware runs *under* `bulwark run` and the secrets are out of reach |
+| Malicious MCP / prompt injection | local creds, API keys | **Yes** | the agent/MCP process is in the supervised tree |
+| Secret already in an env var | the env secret | **No** | not a file read — needs env scrubbing, a different control |
+| Secret inside the allowed workspace | that secret | **No** | Bulwark bounds *reach*, not what's already in scope |
+
+The honest cells (the "No"s and "Partly") are the point: a read-gate is not a
+universal exfil shield, and saying so is what makes the "Yes" rows credible.
 
 ## How Bulwark changes the outcome
 
