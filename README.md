@@ -1,3 +1,11 @@
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/logo-dark.png">
+    <source media="(prefers-color-scheme: light)" srcset="assets/logo-light.png">
+    <img alt="Bulwark" src="assets/logo-dark.png" width="200">
+  </picture>
+</p>
+
 # Bulwark
 
 > The kernel asks before the bytes leave the disk.
@@ -159,6 +167,17 @@ bulwark reset   # clears the taint after review
 This bounds the blast radius after an unclean recovery. A held read at the exact
 instant of a hard kill is governed by the kernel's documented behaviour (see
 below); hardened mode is the crash-safe answer for that case.
+
+## Security review
+
+Before this enforcement was opened publicly it went through repeated adversarial
+review — attacking the gate, fixing what was found, then attacking the fixes —
+until two consecutive rounds found nothing a supervised agent could reach. That
+pass surfaced around a dozen-and-a-half issues, including a few that the first
+round of fixes introduced; each is closed with a regression test that fails on
+the pre-fix code and passes on the fixed code, verified on real hardware (Linux
+kernel 6.12, macOS 26). What Bulwark does **not** cross is documented as plainly
+as what it does.
 
 ## Remote: let an agent SSH into a server, gated
 
