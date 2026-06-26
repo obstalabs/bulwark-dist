@@ -1,8 +1,8 @@
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="assets/ouroboros-light.png">
-    <source media="(prefers-color-scheme: light)" srcset="assets/ouroboros-dark.png">
-    <img alt="Bulwark" src="assets/ouroboros-light.png" width="160">
+    <source media="(prefers-color-scheme: dark)" srcset="assets/logo-dark.png">
+    <source media="(prefers-color-scheme: light)" srcset="assets/logo-light.png">
+    <img alt="Bulwark" src="assets/logo-dark.png" width="200">
   </picture>
 </p>
 
